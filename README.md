@@ -22,13 +22,18 @@ Create some virtual environments:
 (Mainly only useful for later deployment to AWS lambdas)
 
 # Build
-Since we're not using lambda currently, the build step can be skipped for now.
+The build step could be useful for building lambda requirements in the future, but can be skipped for now.
 
 # Test
 
-  python3 -m pytest src/tests
-
-
+  pytest
 
 
 # Run
+
+To get the benefits of the mutator directly, you'll want to run it from within your own code, to mutate a class of your own creation.
+
+However, in the meantime, you can run an example command console via:
+
+    python3 src/mutator/example.py
+
