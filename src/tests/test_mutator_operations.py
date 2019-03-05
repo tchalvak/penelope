@@ -23,7 +23,7 @@ class Person:
 
 # A wrapper for handling command mutation and examination of a composed object
 class Mutator:
-    def __init__(self, target):
+    def __init__(self, target=None):
         self._commands = []
         self._target = target
     
