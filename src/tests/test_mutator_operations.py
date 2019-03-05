@@ -1,89 +1,13 @@
+import sys
 import datetime
+
 import pytest
 
-class Person:
-    def __init__(self, name, surname, birthdate, address, telephone, email):
-        self.name = name
-        self.surname = surname
-        self.birthdate = birthdate
-
-        self.address = address
-        self.telephone = telephone
-        self.email = email
-
-    def age(self):
-        today = datetime.date.today()
-        age = today.year - self.birthdate.year
-
-        if today < datetime.date(today.year, self.birthdate.month, self.birthdate.day):
-            age -= 1
-
-        return age
-
-# Wrap the object by composition and act as ducktype
-class GlassBox:
-    def __init__(self, core_object, new_props):
-        self._core_object = core_object
-        for prop, value in new_props:
-            self.prop = value
+from ..person import Person
+from ..mutator import Mutator
 
 
-# A wrapper for handling command mutation and examination of a composed object
-class Mutator:
-    def __init__(self, target=None):
-        self._commands = {
-            'get': 'get',
-            'set': 'set',
-            '*': '__repr__'
-        }
-        self._original_instance = target
-        self._properties = {}
-
-    # Parse a command into its parts
-    def parse_command(self, command):
-        parts = command.split(' ')
-        prefix = parts[0].lower()
-        suffix = parts[1]
-        if(prefix is 'get'):
-            self.get_prop(suffix)
-        else:
-            if(suffix is '*'):
-                return self.list()
-            else:
-                set_prop = suffix.split('=')[0]
-                set_val = suffix.split('=')[1]
-                self.set_prop(set_prop, set_val)
-
-    # Get return the current value of a target prop
-    def get_prop(self, prop):
-        return self._properties[prop]
-
-    # Set will set the contents of a prop
-    def set_prop(self, prop, val):
-        # Check that the types are comparable
-        self._properties[prop] = val
-        return self._properties[prop]
-
-    # Print out object props and current values
-    def list(self):
-        result = ''
-        
-        # Return a : delimited string
-        return '[list] '.join([f'{prop}: {value}' for prop, value in self._properties])
-
-    def __str__(self):
-        return self.list()
-
-    def __repr__(self):
-        return self.list()
-
-    # Write the object with new props
-    def write(self):
-        # Create a subclass of the target object and return it by composition
-        return GlassBox(self._target, self._properties)
-
-
-@pytest.fixture()
+@pytest.yield_fixture()
 def resource():
     print("setup")
     person = Person(
@@ -131,7 +55,7 @@ class TestMutatorOperations:
         mutator.set_prop('name', random_chars)
         assert(mutator.get_prop('name') == random_chars) 
 
-    @pytest.mark.skip(reason="not yet implemented")
+    @pytest.mark.xfail
     # it should error when trying to override an existing property of an incompatible type
     def test_it_should_error_on_incompatible_types(self, resource):
         with pytest.raises(Exception):
@@ -141,25 +65,25 @@ class TestMutatorOperations:
     # When the list operation is called, it should print out starting and set properties
     def test_partial_list_outputs(self, resource):
         mutator = Mutator(resource)
-        assert(mutator.list() is not None)
-        assert(type(mutator.list()) is str)
-        assert(mutator.list() is not '')
-        assert('name' in mutator.list())
-        assert('Jane' in mutator.list())
+        assert(mutator.render() is not None)
+        assert(type(mutator.render()) is str)
+        assert(mutator.render() is not '')
+        assert('name' in mutator.render())
+        assert('Jane' in mutator.render())
 
     def test_more_full_list_output_of_mutator(self, resource):
         mutator = Mutator(resource)
         more_matches = ['birthdate', 'telephone', 'email', 'age']
-        assert(mutator.list() is not '')
+        assert(mutator.render() is not '')
         assert('birthdate' in str(mutator))
         assert(all([x in str(mutator) for x in more_matches]))
 
-    @pytest.mark.skip(reason="not yet implemented")
     def test_extract_the_object_can_run_methods(self, resource):
         mutator = Mutator(resource)
-        assert(mutator.age() == 20)
+        final = mutator.write()
+        assert(final.age() == 26)
 
-    @pytest.mark.skip(reason="not yet implemented")
+    @pytest.mark.xfail
     def test_the_mutator_cannot_set_props_that_override_existing_methods(self, resource):
         with pytest.raises(Exception):
             mutator = Mutator(resource)

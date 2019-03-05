@@ -13,13 +13,9 @@ Install from the requirements:
 
 Create some virtual environments:
 
-    python3 -m venv env
-    source env/bin/activate
-    cd src/invoker
-    python3 -m venv env
-    ./env/bin/pip3 install -r requirements.txt
-
-(Mainly only useful for later deployment to AWS lambdas)
+    python3 -m venv .venv
+    source .venv/bin/activate
+    pip3 install -r requirements.txt
 
 # Build
 The build step could be useful for building lambda requirements in the future, but can be skipped for now.
