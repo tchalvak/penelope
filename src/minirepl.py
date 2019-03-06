@@ -1,20 +1,18 @@
 import code
 import datetime
 
-from .mutator import Mutator
-from .person import Person
-
-# Simple Python Repl https://dev.to/rpalo/your-own-python-repl-in-twenty-lines-or-less
+from mutator import Mutator
+from person import Person
 
 # Perform mutation operations depending on the commands involved
 class MiniRepl:
     def __init__(self, mutant):
         self.size = 50
         self._mutant = mutant
-
+    
     # Run the command string passed in
     def command(self, command):
-        self._mutant.command(command)
+        return self._mutant.command(command)
 
     def __repr__(self):
         return f"Final core object: {str(self._mutant)}"
@@ -22,17 +20,25 @@ class MiniRepl:
 # Handle the interactivity
 def interact(manipulatee):
     mutant = Mutator(manipulatee)
-    rep = MiniRepl(mutant)
-    command_list = {
-        "GET *": rep.command,
-        "SET": rep.command,
-    }
-    venn = {**command_list, **locals()}
-    code.interact(
-        banner="Input commands to interact with your object, for example GET name, SET name=Will, GET *",
-        local=venn,
-        exitmsg="Exiting interactive portion"
-    )
+
+    start = "Input commands to interact with your object, for example GET name, SET name=Will, GET *, exit"
+    end = "\nExiting interactive shell\n"
+    print(start)
+    # Prompt, Read, Parse, Validate, Execute, in a while loop
+    while True:
+        outcome = ''
+        txt = input("")
+        if txt == 'exit' or txt == 'exit()':
+            break
+        try:
+            outcome = mutant.command(txt)
+        except ValueError:
+            print('Invalid command syntax.')
+        except AttributeError:
+            print('Getting an attribute that does not exist yet does not allow me a valid response.')
+        print(outcome)
+
+    print(end)
     return mutant.render()
 
 #Execute the mini-repl

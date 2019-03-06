@@ -25,7 +25,7 @@ class Mutator:
 
     # Parse a command into its parts, and run
     def command(self, command):
-        prefix, suffix = command.split(" ")
+        prefix, suffix, *_ = command.split(" ")
         prefix = prefix.lower()  # Normalize
         # TODO: Consider command pattern here
         if prefix == "get":
@@ -56,7 +56,7 @@ class Mutator:
         rest = self._mimic._internal_props
         # Join the parts of the wrapped object and the dict
         members = {**some, **rest}
-        return "[list] " + str(members)
+        return "Currently: " + str(members)
 
     def __str__(self):
         return self.render()

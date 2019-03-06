@@ -3,9 +3,9 @@ import datetime
 
 import pytest
 
-from ..minirepl import MiniRepl
-from ..person import Person
-from ..mutator import Mutator
+sys.path.insert(0, "src")
+from .. import minirepl
+from .. import mutator
 
 
 # If you provide a class to the minirepl, can it execute on that.
@@ -17,6 +17,6 @@ class TestMiniRepl:
             def __init__(self):
                 self.name = 'Martha'
         
-        mini = MiniRepl(Mutator(Dummy()))
+        mini = minirepl.MiniRepl(mutator.Mutator(Dummy()))
         assert len(str(mini)) > 20
 
