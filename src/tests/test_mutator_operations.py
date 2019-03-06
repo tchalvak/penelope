@@ -6,7 +6,7 @@ import pytest
 from ..person import Person
 from ..mutator import Mutator
 
-
+# A trivial person object to act upon in testing
 @pytest.yield_fixture()
 def resource():
     print("setup")
@@ -88,5 +88,14 @@ class TestMutatorOperations:
         with pytest.raises(Exception):
             mutator = Mutator(resource)
             mutator.set_prop('age', 999)
+
+    def test_string_commands_set(self, resource):
+        resource.name = 'JamesZ'
+        mutator = Mutator(resource)
+        mutator.command('SET name=William')
+        assert(mutator.command('GET name') == 'William')
+        final = mutator.write()
+        assert(final.name == 'William')
+        assert(final.age() == 26)
 
     # When I reach this point, refactor

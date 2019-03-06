@@ -17,7 +17,7 @@ class Mimic:
         self.__dict__[prop] = val
         return self.__dict__[prop]
 
-        
+     
 
 
 # A wrapper for handling command mutation and examination of a composed object
@@ -25,20 +25,23 @@ class Mutator:
     def __init__(self, target=None):
         self._mimic = Mimic(target)
 
-    # Parse a command into its parts
-    def parse_command(self, command):
+    # Parse a command into its parts, and run
+    def command(self, command):
         parts = command.split(' ')
         prefix = parts[0].lower()
         suffix = parts[1]
+        # TODO: To make this more extensible for more commands, this should be turned into a command pattern
         if(prefix is 'get'):
-            self.get_prop(suffix)
-        else:
             if(suffix is '*'):
                 return self.render()
             else:
-                set_prop = suffix.split('=')[0]
-                set_val = suffix.split('=')[1]
-                self.set_prop(set_prop, set_val)
+                return self.get_prop(suffix)
+        elif (prefix is 'set'):
+            nprop, nval = suffix.split('=')
+            self.set_prop(nprop, nval)
+        else:
+            raise ValueError(f"Invalid command structure for command: {command}")
+
 
     # Get return the current value of a target prop
     def get_prop(self, prop):
