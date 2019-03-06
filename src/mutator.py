@@ -27,17 +27,16 @@ class Mutator:
 
     # Parse a command into its parts, and run
     def command(self, command):
-        parts = command.split(' ')
-        prefix = parts[0].lower()
-        suffix = parts[1]
-        # TODO: To make this more extensible for more commands, this should be turned into a command pattern
-        if(prefix is 'get'):
-            if(suffix is '*'):
+        prefix, suffix = command.split(" ")
+        prefix = prefix.lower()  # Normalize
+        # TODO: Consider command pattern here
+        if prefix == "get":
+            if suffix == "*":
                 return self.render()
             else:
                 return self.get_prop(suffix)
-        elif (prefix is 'set'):
-            nprop, nval = suffix.split('=')
+        elif prefix == "set":
+            nprop, nval = suffix.split("=")
             self.set_prop(nprop, nval)
         else:
             raise ValueError(f"Invalid command structure for command: {command}")
