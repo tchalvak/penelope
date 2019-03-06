@@ -1,8 +1,8 @@
 import code
 import datetime
 
-from mutator import Mutator
-from person import Person
+from .mutator import Mutator
+from .person import Person
 
 # Simple Python Repl https://dev.to/rpalo/your-own-python-repl-in-twenty-lines-or-less
 
@@ -17,7 +17,7 @@ class MiniRepl:
         self._mutant.command(command)
 
     def __repr__(self):
-        return f"Final core object: {self._mutant.list()}"
+        return f"Final core object: {str(self._mutant)}"
 
 # Handle the interactivity
 def interact(manipulatee):
