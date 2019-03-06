@@ -29,7 +29,7 @@ To get the benefits of the mutator directly, you'll want to run it from within y
     from minirepl import interact
 
     ...
-    result = interact(YourObjectHere)
+    result = interact(YourObjectInstanceHere)
 
 To try a console session with a pre-made object, run the command:
 

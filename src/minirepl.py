@@ -4,8 +4,9 @@ import datetime
 from mutator import Mutator
 from person import Person
 
-# Perform mutation operations depending on the commands involved
+# 
 class MiniRepl:
+    """ A simple wrapper for the mutator """
     def __init__(self, mutant):
         self.size = 50
         self._mutant = mutant
@@ -17,8 +18,8 @@ class MiniRepl:
     def __repr__(self):
         return f"Final core object: {str(self._mutant)}"
 
-# Handle the interactivity
 def interact(manipulatee):
+    """ Handle interactive command input """
     mutant = Mutator(manipulatee)
 
     start = "Input commands to interact with your object, for example GET name, SET name=Will, GET *, exit"
@@ -41,7 +42,7 @@ def interact(manipulatee):
     print(end)
     return mutant.render()
 
-#Execute the mini-repl
+#Execute the mini-repl on a person
 if __name__ == "__main__":
     person = Person(
         "Jane",

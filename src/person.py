@@ -1,7 +1,8 @@
 import datetime
 
-# A simple person wrapper object
+
 class Person:
+    """ A simple person wrapper object for use in Mutation """
     def __init__(self, name, surname, birthdate, address, telephone, email):
         self.name = name
         self.surname = surname

@@ -1,32 +1,46 @@
-# Wrap the object by composition and act as ducktype
-class Mimic:
+
+
+class Mimic(object):
+    """ Wrap the object by composition and act as ducktype """
     def __init__(self, core):
         self._core = core
         self._internal_props = {}
 
-    # Get results from dict or the internal object
+    # Cascade to get val from dict or the core object
     def __getattr__(self, attr):
         if attr in self._internal_props:
             return self._internal_props[attr]
-        # get the wrapped object
         return getattr(self._core, attr)
 
-    # Add a prop and val to the internal dict
-    def __setattr__(self, prop, val):
-        # TODO: Throw error on type incompatibility later
-        self.__dict__[prop] = val
-        return self.__dict__[prop]
+    # def __setattr__(self, prop, val):
+    #     try:
+    #         self.__dict__._internal_props[prop] = val
+    #         object.__setattr__(self, '_internal_props', self.__dict__._internal_props)
+    #     except AttributeError:
+    #         self.__dict__[prop] = val
+    #     return val
+
+    # Add props and vals to the internal dict if present
+    def set_prop(self, prop, val):
+        self._internal_props[prop] = val
+        setattr(self._core, prop, val)
+        return val
+
+    # Wrapper to get the present member props
+    def _members(self):
+        coredict = vars(self._core)
+        return {**coredict, **self._internal_props} # the dict overrides
 
 
-# A wrapper for handling command mutation and examination of a composed object
 class Mutator:
+    """ A manipulator for handling command mutation and examination of a mimic object """
     def __init__(self, target=None):
         self._mimic = Mimic(target)
 
     # Parse a command into its parts, and run
     def command(self, command):
         prefix, suffix, *_ = command.split(" ")
-        prefix = prefix.lower()  # Normalize
+        prefix = prefix.lower()
         # TODO: Consider command pattern here
         if prefix == "get":
             if suffix == "*":
@@ -45,18 +59,12 @@ class Mutator:
 
     # Set will set the contents of a prop
     def set_prop(self, prop, val):
-        # Check that the types are comparable
-        setattr(self._mimic, prop, val)
+        self._mimic.set_prop(prop, val)
         return val
 
     # Print out object props and current values
     def render(self):
-        # Return a : delimited string
-        some = vars(self._mimic._core)
-        rest = self._mimic._internal_props
-        # Join the parts of the wrapped object and the dict
-        members = {**some, **rest}
-        return "Currently: " + str(members)
+        return "Currently: " + str(self._mimic._members())
 
     def __str__(self):
         return self.render()
@@ -64,7 +72,6 @@ class Mutator:
     def __repr__(self):
         return self.render()
 
-    # Write the object with new props
+    # Finalize the object mimic with new props
     def write(self):
-        # Return compositional subclass
         return self._mimic

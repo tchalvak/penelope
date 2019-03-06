@@ -6,9 +6,9 @@ import pytest
 from ..person import Person
 from ..mutator import Mutator
 
-# A trivial person object to act upon in testing
 @pytest.yield_fixture()
 def resource():
+    """ A trivial person object to act upon in testing """
     print("setup")
     person = Person(
         "Jane",
@@ -22,8 +22,8 @@ def resource():
     print("teardown")
 
 
-# Provide terse, long test method names for explicitness
 class TestMutatorOperations:
+    """ Check the longer Mutator """
     # it should be able to instantiate Mutator and a target class
     def test_mutator_can_instantiate(self, resource):
         mutator = Mutator(resource)
@@ -95,9 +95,15 @@ class TestMutatorOperations:
         resource.name = "JamesZ"
         mutator = Mutator(resource)
         mutator.command("SET name=William")
+        mutator.command("SET new_prop=Zigzag")
+        mutator.command("SET AAAAA=Zigzag")
         assert mutator.command("GET name") == "William"
         final = mutator.write()
         assert final.name == "William"
+        assert final.new_prop == "Zigzag"
+        assert final.AAAAA == "Zigzag"
+        assert 'new_prop' in final._members()
+        assert 'AAAAA' in final._members()
         assert final.age() == 26
 
     def test_list_command(self, resource):
@@ -109,3 +115,4 @@ class TestMutatorOperations:
         assert all([x in result for x in more_matches])
 
     # When I reach this point, refactor
+
