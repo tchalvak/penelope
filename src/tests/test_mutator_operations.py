@@ -84,9 +84,7 @@ class TestMutatorOperations:
         final = mutator.write()
         assert final.age() == 26
 
-    def test_the_mutator_cannot_set_props_that_override_existing_methods(
-        self, resource
-    ):
+    def test_mutator_cannot_override_existing_methods(self, resource):
         with pytest.raises(Exception):
             mutator = Mutator(resource)
             mutator.set_prop("age", 999)
@@ -99,5 +97,13 @@ class TestMutatorOperations:
         final = mutator.write()
         assert final.name == "William"
         assert final.age() == 26
+
+    def test_list_command(self, resource):
+        mutator = Mutator(resource)
+        more_matches = ["birthdate", "telephone", "email"]
+        result = mutator.command("GET *")
+        assert result is not ""
+        assert "birthdate" in result
+        assert all([x in result for x in more_matches])
 
     # When I reach this point, refactor

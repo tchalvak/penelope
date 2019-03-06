@@ -1,7 +1,7 @@
 # Wrap the object by composition and act as ducktype
 class Mimic:
-    def __init__(self, core_object):
-        self._core_object = core_object
+    def __init__(self, core):
+        self._core = core
         self._internal_props = {}
 
     # Get results from dict or the internal object
@@ -9,7 +9,7 @@ class Mimic:
         if attr in self._internal_props:
             return self._internal_props[attr]
         # get the wrapped object
-        return getattr(self._core_object, attr)
+        return getattr(self._core, attr)
 
     # Add a prop and val to the internal dict
     def __setattr__(self, prop, val):
@@ -52,7 +52,7 @@ class Mutator:
     # Print out object props and current values
     def render(self):
         # Return a : delimited string
-        some = vars(self._mimic._core_object)
+        some = vars(self._mimic._core)
         rest = self._mimic._internal_props
         # Join the parts of the wrapped object and the dict
         members = {**some, **rest}
