@@ -3,13 +3,10 @@ Python cli for testing and state manipulation.
 
 
 # Install
-Check that you have python3 installed, I am running version 3.7:
+Check that you have python3 installed, this project was coded with 3.7.2:
 
     python3 --version
     Python 3.7.2
-
-Install from the requirements:
-   pip3 install -r requirements.txt
 
 Create some virtual environments:
 
@@ -27,9 +24,14 @@ The build step could be useful for building lambda requirements in the future, b
 
 # Run
 
-To get the benefits of the mutator directly, you'll want to run it from within your own code, to mutate a class of your own creation.
+To get the benefits of the mutator directly, you'll want to run it from within your own code, to mutate a class of your own creation. For example:
 
-However, in the meantime, you can run an example command console via:
+    from minirepl import interact
 
-    python3 src/mutator/example.py
+    ...
+    result = interact(YourObjectHere)
+
+To try a console session with a pre-made object, run the command:
+
+    python3 src/minirepl.py
 
