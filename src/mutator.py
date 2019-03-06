@@ -4,7 +4,7 @@ class Mimic:
         self._core_object = core_object
         self._internal_props = {}
 
-    # Get results from dict or the internal object 
+    # Get results from dict or the internal object
     def __getattr__(self, attr):
         if attr in self._internal_props:
             return self._internal_props[attr]
@@ -16,8 +16,6 @@ class Mimic:
         # TODO: Throw error on type incompatibility later
         self.__dict__[prop] = val
         return self.__dict__[prop]
-
-     
 
 
 # A wrapper for handling command mutation and examination of a composed object
@@ -41,7 +39,6 @@ class Mutator:
         else:
             raise ValueError(f"Invalid command structure for command: {command}")
 
-
     # Get return the current value of a target prop
     def get_prop(self, prop):
         return getattr(self._mimic, prop)
@@ -59,7 +56,7 @@ class Mutator:
         rest = self._mimic._internal_props
         # Join the parts of the wrapped object and the dict
         members = {**some, **rest}
-        return '[list] ' + str(members)
+        return "[list] " + str(members)
 
     def __str__(self):
         return self.render()
