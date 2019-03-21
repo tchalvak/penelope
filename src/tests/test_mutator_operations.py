@@ -83,7 +83,7 @@ class TestMutatorOperations:
     def test_extract_the_object_can_run_methods(self, resource):
         mutator = Mutator(resource)
         final = mutator.write()
-        assert final.age() == 26
+        assert final.age() == 27
 
     @pytest.mark.xfail
     def test_mutator_cannot_override_existing_methods(self, resource):
@@ -104,7 +104,7 @@ class TestMutatorOperations:
         assert final.AAAAA == "Zigzag"
         assert 'new_prop' in final._members()
         assert 'AAAAA' in final._members()
-        assert final.age() == 26
+        assert final.age() == 27
 
     def test_list_command(self, resource):
         mutator = Mutator(resource)
